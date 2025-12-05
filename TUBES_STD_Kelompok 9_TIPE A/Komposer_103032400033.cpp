@@ -1,12 +1,18 @@
 #include "komposer.h"
+#include "relation.h"
+#include <iostream>
 
-void insertLastKomposer(ListKomposer &L, addressK P) {
-    // I.S : L mungkin kosong atau tidak
-    // F.S : P menjadi elemen terakhir pada list
+using namespace std;
+
+void createListKomposer(ListKomposer &L) {
+    L.first = NULL;
+}
+
+void insertLastKomposer(ListKomposer &L, adrKomposer P) {
     if (L.first == NULL) {
         L.first = P;
     } else {
-        addressK Q = L.first;
+        adrKomposer Q = L.first;
         while (Q->next != NULL) {
             Q = Q->next;
         }
@@ -14,54 +20,53 @@ void insertLastKomposer(ListKomposer &L, addressK P) {
     }
 }
 
-void insertAfterKomposer(addressK Prec, addressK P) {
-    // I.S : Prec adalah elemen valid pada list
-    // F.S : P disisipkan setelah Prec
+void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P) {
     if (Prec != NULL) {
         P->next = Prec->next;
         Prec->next = P;
     }
 }
 
-void deleteFirstKomposer(ListKomposer &L, addressK &P) {
-    // I.S : L mungkin kosong atau tidak
-    // F.S : P berisi elemen pertama yang dihapus
+void deleteFirstKomposer(ListKomposer &L, adrKomposer &P) {
     if (L.first != NULL) {
         P = L.first;
         L.first = P->next;
         P->next = NULL;
-    } else {
-        P = NULL;
     }
 }
 
-void deleteLastKomposer(ListKomposer &L, addressK &P) {
-    // I.S : L mungkin kosong atau tidak
-    // F.S : P berisi elemen terakhir yang dihapus
-    if (L.first == NULL) {
-        P = NULL;
-
-    } else if (L.first->next == NULL) {
-        P = L.first;
-        L.first = NULL;
-
-    } else {
-        addressK Q = L.first;
-        while (Q->next->next != NULL) {
-            Q = Q->next;
+void deleteLastKomposer(ListKomposer &L, adrKomposer &P) {
+    if (L.first != NULL) {
+        if (L.first->next == NULL) {
+            P = L.first;
+            L.first = NULL;
+        } else {
+            adrKomposer Q = L.first;
+            while (Q->next->next != NULL) {
+                Q = Q->next;
+            }
+            P = Q->next;
+            Q->next = NULL;
         }
-        P = Q->next;
-        Q->next = NULL;
     }
 }
 
-addressK findElmKomposer(ListKomposer L, string x) {
-    // I.S : L terdefinisi
-    // F.S : Mengembalikan alamat elemen dengan info x,
-    //       atau NULL jika tidak ditemukan
-    addressK P = L.first;
-    while (P != NULL && P->info != x) {
+adrKomposer findKomposer(ListKomposer L, string id) {
+    adrKomposer P = L.first;
+    while (P != NULL) {
+        if (P->info.idKomposer == id) {
+            return P;
+        }
         P = P->next;
     }
+    return NULL;
+}
+
+adrKomposer newKomposer(string id, string nama) {
+    adrKomposer P = new elkomposer;
+    P->info.idKomposer = id;
+    P->info.nama = nama;
+    P->next = NULL;
+    P->firstRelasi = NULL;
     return P;
 }
