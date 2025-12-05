@@ -1,41 +1,43 @@
 #ifndef MUSIK_H
 #define MUSIK_H
 
-#include <string>
+#include <iostream>
 using namespace std;
 
-struct Musik {
+struct infotypeMusik {
+    string idMusik;
     string judul;
 };
 
-typedef struct elmusik *adrMusik;
-struct elmusik {
-    Musik info;
+typedef struct elmusi *adrMusik;
+
+struct elmusi {
+    infotypeMusik info;
     adrMusik next;
+    adrMusik prev;
 };
 
 struct ListMusik {
     adrMusik first;
+    adrMusik last;
 };
 
-// CREATE
+// KONSTRUKTOR
 void createListMusik(ListMusik &L);
+adrMusik newMusik(string id, string judul);
 
-// NEW ELEMENT
-adrMusik newMusik(string judul);
-
-// INSERT = 3
+// INSERT
 void insertFirstMusik(ListMusik &L, adrMusik P);
 void insertLastMusik(ListMusik &L, adrMusik P);
 void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P);
 
-// DELETE = 3
+// DELETE
 void deleteFirstMusik(ListMusik &L, adrMusik &P);
 void deleteLastMusik(ListMusik &L, adrMusik &P);
 void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P);
 
-// FIND
-adrMusik findMusik(ListMusik L, string judul);
+// SEARCH
+adrMusik findMusik(ListMusik L, string id);
 
 // SHOW
 void showAllMusik(ListMusik L);

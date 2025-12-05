@@ -13,6 +13,7 @@ struct elrelasi {
 
 struct ListRelasi {
     adrRelasi first;
+    adrRelasi last;
 };
 
 // CREATE

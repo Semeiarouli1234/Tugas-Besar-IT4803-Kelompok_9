@@ -1,66 +1,84 @@
 #include "Musik.h"
+#include <iostream>
+using namespace std;
 
-// Insert Musik di akhir (Insert Last)
-void insertLastMusic(int id,string judul,string genre,double durasi){
-    Music* baru = new Music{id,judul,genre,durasi,nullptr,nullptr};
+void createListMusik(ListMusik &L) {
+    L.first = NULL;
+    L.last = NULL;
+}
 
-    if(headMusic==nullptr){
-        headMusic = baru;
+adrMusik newMusik(string id, string judul) {
+    adrMusik P = new elmusik;   // pastikan struct ini sesuai dengan header
+    P->info.idMusik = id;
+    P->info.judul = judul;
+    P->next = NULL;
+    P->prev = NULL;
+    return P;
+}
+
+void insertLastMusik(ListMusik &L, adrMusik P) {
+    if (L.first == NULL) {
+        L.first = L.last = P;
     } else {
-        Music* cur = headMusic;
-        while(cur->next != nullptr) cur = cur->next;
-        cur->next = baru;
+        L.last->next = P;
+        P->prev = L.last;
+        L.last = P;
     }
 }
 
-// Insert After -> tambah musik setelah ID tertentu
-void insertAfterMusic(int targetID,int id,string judul,string genre,double durasi){
-    Music* cur = headMusic;
-    while(cur != nullptr && cur->id != targetID) cur = cur->next;
+void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P) {
+    if (Prec != NULL) {
+        P->next = Prec->next;
 
-    if(cur != nullptr){
-        Music* baru = new Music{id,judul,genre,durasi,nullptr,nullptr};
-        baru->next = cur->next;
-        cur->next = baru;
+        if (Prec->next != NULL)
+            Prec->next->prev = P;
+
+        P->prev = Prec;
+        Prec->next = P;
+
+        if (Prec == L.last)
+            L.last = P;
     }
 }
 
-// Delete First
-void deleteFirstMusic(){
-    if(headMusic == nullptr) return;
-    Music* del = headMusic;
-    headMusic = headMusic->next;
-    delete del;
+void deleteFirstMusik(ListMusik &L, adrMusik &P) {
+    if (L.first != NULL) {
+        P = L.first;
+
+        if (L.first == L.last) {
+            L.first = L.last = NULL;
+        } else {
+            L.first = P->next;
+            L.first->prev = NULL;
+        }
+
+        P->next = NULL;
+        P->prev = NULL;
+    }
 }
 
-// Delete Last
-void deleteLastMusic(){
-    if(headMusic == nullptr) return;
+void deleteLastMusik(ListMusik &L, adrMusik &P) {
+    if (L.last != NULL) {
+        P = L.last;
 
-    if(headMusic->next == nullptr){
-        delete headMusic;
-        headMusic = nullptr;
-        return;
+        if (L.first == L.last) {
+            L.first = L.last = NULL;
+        } else {
+            L.last = P->prev;
+            L.last->next = NULL;
+        }
+
+        P->next = NULL;
+        P->prev = NULL;
     }
-
-    Music* cur = headMusic;
-    while(cur->next->next != nullptr) cur = cur->next;
-
-    delete cur->next;
-    cur->next = nullptr;
 }
 
-// View All Music
-void viewAllMusic(){
-    cout << "\n===== LIST MUSIK =====\n";
-    Music* cur = headMusic;
-    if(cur==nullptr){
-        cout<<"(Kosong)\n";
-        return;
+adrMusik findMusik(ListMusik L, string id) {
+    adrMusik P = L.first;
+    while (P != NULL) {
+        if (P->info.idMusik == id)
+            return P;
+        P = P->next;
     }
-
-    while(cur!=nullptr){
-        cout<<"ID: "<<cur->id<<" | Judul: "<<cur->judul<<" | Genre: "<<cur->genre<<" | Durasi: "<<cur->durasi<<" menit\n";
-        cur = cur->next;
-    }
+    return NULL;
 }
