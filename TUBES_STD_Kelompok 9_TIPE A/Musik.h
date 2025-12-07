@@ -2,19 +2,22 @@
 #define MUSIK_H
 
 #include <iostream>
+
 using namespace std;
 
-struct infotypeMusik {
+struct InfoMusik {
     string idMusik;
     string judul;
+    float durasi;
+    int tahunRilis;
 };
 
-typedef struct elmusi *adrMusik;
+typedef NodeMusik *adrMusik;
 
-struct elmusi {
-    infotypeMusik info;
-    adrMusik next;
+struct NodeMusik {
+    InfoMusik info;
     adrMusik prev;
+    adrMusik next;
 };
 
 struct ListMusik {
@@ -22,24 +25,14 @@ struct ListMusik {
     adrMusik last;
 };
 
-// KONSTRUKTOR
 void createListMusik(ListMusik &L);
-adrMusik newMusik(string id, string judul);
-
-// INSERT
+adrMusik newMusik(InfoMusik X);
 void insertFirstMusik(ListMusik &L, adrMusik P);
 void insertLastMusik(ListMusik &L, adrMusik P);
 void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P);
-
-// DELETE
 void deleteFirstMusik(ListMusik &L, adrMusik &P);
 void deleteLastMusik(ListMusik &L, adrMusik &P);
 void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P);
-
-// SEARCH
-adrMusik findMusik(ListMusik L, string id);
-
-// SHOW
+adrMusik findMusik(ListMusik L, string keyword);
 void showAllMusik(ListMusik L);
-
 #endif

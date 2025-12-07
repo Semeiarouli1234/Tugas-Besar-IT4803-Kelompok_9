@@ -1,19 +1,18 @@
-#include "komposer.h"
-#include "relation.h"
+#include "komposer_relasi.h"
 #include <iostream>
 
 using namespace std;
 
 void createListKomposer(ListKomposer &L) {
-    L.first = NULL;
+    L.first = nullptr;
 }
 
 void insertLastKomposer(ListKomposer &L, adrKomposer P) {
-    if (L.first == NULL) {
+    if (L.first == nullptr) {
         L.first = P;
     } else {
         adrKomposer Q = L.first;
-        while (Q->next != NULL) {
+        while (Q->next != nullptr) {
             Q = Q->next;
         }
         Q->next = P;
@@ -21,52 +20,76 @@ void insertLastKomposer(ListKomposer &L, adrKomposer P) {
 }
 
 void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P) {
-    if (Prec != NULL) {
+    if (Prec != nullptr) {
         P->next = Prec->next;
         Prec->next = P;
     }
 }
 
 void deleteFirstKomposer(ListKomposer &L, adrKomposer &P) {
-    if (L.first != NULL) {
+    if (L.first == nullptr) {
+        P = nullptr;
+    } else {
         P = L.first;
         L.first = P->next;
-        P->next = NULL;
+        P->next = nullptr;
     }
 }
 
 void deleteLastKomposer(ListKomposer &L, adrKomposer &P) {
-    if (L.first != NULL) {
-        if (L.first->next == NULL) {
-            P = L.first;
-            L.first = NULL;
-        } else {
-            adrKomposer Q = L.first;
-            while (Q->next->next != NULL) {
-                Q = Q->next;
-            }
-            P = Q->next;
-            Q->next = NULL;
+    if (L.first == nullptr) {
+        P = nullptr;
+    } else if (L.first->next == nullptr) {
+        P = L.first;
+        L.first = nullptr;
+    } else {
+        adrKomposer Q = L.first;
+        while (Q->next->next != nullptr) {
+            Q = Q->next;
         }
+        P = Q->next;
+        Q->next = nullptr;
     }
 }
 
-adrKomposer findKomposer(ListKomposer L, string id) {
+adrKomposer findKomposer(ListKomposer L, string idKomposer) {
     adrKomposer P = L.first;
-    while (P != NULL) {
-        if (P->info.idKomposer == id) {
-            return P;
-        }
+    while (P != nullptr && P->info.idKomposer != idKomposer) {
         P = P->next;
     }
-    return NULL;
+    return P;
 }
 
-adrKomposer newKomposer(string id, string nama) {
-    adrKomposer P = new elkomposer;
-    P->info.idKomposer = id;
-    P->info.nama = nama;
-    P->next = NULL;
-    P->firstRelasi = NULL;
+adrKomposer newKomposer(InfoKomposer X) {
+    adrKomposer P = new NodeKomposer;
+    P->info = X;
+    P->next = nullptr;
+    P->firstRelasi = nullptr;
     return P;
+}
+
+adrRelasi newRelasi(adrMusik M) {
+    adrRelasi R = new NodeRelasi;
+    R->musik = M;
+    R->next = nullptr;
+    return R;
+}
+
+void deleteRelasi(adrKomposer K, string idMusik) {
+    adrRelasi R = K->firstRelasi;
+    adrRelasi Prec = nullptr;
+
+    while (R != nullptr && R->musik->info.idMusik != idMusik) {
+        Prec = R;
+        R = R->next;
+    }
+
+    if (R != nullptr) {
+        if (Prec == nullptr) {
+            K->firstRelasi = R->next;
+        } else {
+            Prec->next = R->next;
+        }
+        delete R;
+    }
 }
