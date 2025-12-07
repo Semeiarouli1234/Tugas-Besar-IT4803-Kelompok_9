@@ -1,15 +1,10 @@
-#include "komposer.h"
-#include "relation.h"
+#include "komposer_relasi.h"
 #include <iostream>
 
 using namespace std;
 
 void insertFirstKomposer(ListKomposer &L, adrKomposer P) {
-    if (P == NULL) return;
-    P->next = NULL;
-    P->firstRelasi = NULL;
-
-    if (L.first == NULL) {
+    if (L.first == nullptr) {
         L.first = P;
     } else {
         P->next = L.first;
@@ -18,27 +13,50 @@ void insertFirstKomposer(ListKomposer &L, adrKomposer P) {
 }
 
 void deleteAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer &P) {
-    P = NULL;
-    if (Prec == NULL || Prec->next == NULL) return;
-
-    P = Prec->next;
-    Prec->next = P->next;
-    P->next = NULL;
+    if (Prec != nullptr && Prec->next != nullptr) {
+        P = Prec->next;
+        Prec->next = P->next;
+        P->next = nullptr;
+    } else {
+        P = nullptr;
+    }
 }
 
 void showAllKomposer(ListKomposer L) {
-    adrKomposer P = L.first;
+    cout << "\n--- Daftar Komposer ---" << endl;
 
-    if (P == NULL) {
-        cout << "Tidak ada komposer.\n";
+    if (L.first == nullptr) {
+        cout << "List Komposer kosong." << endl;
         return;
     }
 
-    cout << "=== Daftar Komposer ===\n";
-    while (P != NULL) {
-        cout << "ID: " << P->info.idKomposer
-             << " | Nama: " << P->info.nama << endl;
-
+    adrKomposer P = L.first;
+    int i = 1;
+    while (P != nullptr) {
+        cout << i << ". ID: " << P->info.idKomposer
+             << ", Nama: " << P->info.nama
+             << ", Tahun Lahir: " << P->info.Tahun_Lahir
+             << ", Negara: " << P->info.Negara_Asal << endl;
         P = P->next;
+        i++;
+    }
+    cout << "------------------------------------" << endl;
+}
+
+void insertRelasi(adrKomposer K, adrRelasi R) {
+    if (K->firstRelasi == nullptr) {
+        K->firstRelasi = R;
+    } else {
+        R->next = K->firstRelasi;
+        K->firstRelasi = R;
+    }
+}
+
+void showRelasiPerKomposer(adrKomposer K) {
+    adrRelasi R = K->firstRelasi;
+    while (R != nullptr) {
+        cout << R->musik->info.idMusik << " - "
+             << R->musik->info.Judul << endl;
+        R = R->next;
     }
 }

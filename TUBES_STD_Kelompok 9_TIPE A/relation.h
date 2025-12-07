@@ -1,38 +1,45 @@
 #ifndef RELASI_H
 #define RELASI_H
 
-#include "musik.h"
-#include "komposer.h"
+#include <iostream>
+#include <string>
 
-typedef struct elrelasi *adrRelasi;
-struct elrelasi {
-    adrKomposer parent;   // Komposer = parent
-    adrMusik child;       // Musik = child
+typedef struct NodeMusik *adrMusik;
+typedef struct NodeKomposer *adrKomposer;
+typedef struct ListMusik ListMusik;
+typedef struct ListKomposer ListKomposer;
+
+using namespace std;
+
+typedef struct NodeRelasi *adrRelasi;
+struct NodeRelasi {
+    adrMusik toMusik;
+    adrRelasi prev;
     adrRelasi next;
 };
 
-struct ListRelasi {
-    adrRelasi first;
-    adrRelasi last;
-};
+adrRelasi newRelasi(adrMusik P_musik);
 
-// CREATE
-void createListRelasi(ListRelasi &L);
+void insertRelasiFirst(adrKomposer P_komposer, adrRelasi P_relasi);
+void insertRelasiLast(adrKomposer P_komposer, adrRelasi P_relasi);
+void insertRelasiAfter(adrKomposer P_komposer, adrRelasi Prec, adrRelasi P_relasi);
 
-// NEW ELEMENT
-adrRelasi newRelasi(adrKomposer P, adrMusik C);
+void deleteRelasiFirst(adrKomposer P_komposer, adrRelasi &P_relasi_deleted);
+void deleteRelasiLast(adrKomposer P_komposer, adrRelasi &P_relasi_deleted);
+void deleteRelasiAfter(adrKomposer P_komposer, adrRelasi Prec, adrRelasi &P_relasi_deleted);
+void deleteRelasiByMusik(adrKomposer P_komposer, adrMusik P_musik, adrRelasi &P_relasi_deleted);
 
-// INSERT = 3
-void insertFirstRelasi(ListRelasi &L, adrRelasi R);
-void insertLastRelasi(ListRelasi &L, adrRelasi R);
-void insertAfterRelasi(ListRelasi &L, adrRelasi Prec, adrRelasi R);
+adrRelasi findRelasi(adrKomposer P_komposer, adrMusik P_musik);
 
-// DELETE = 3
-void deleteFirstRelasi(ListRelasi &L, adrRelasi &R);
-void deleteLastRelasi(ListRelasi &L, adrRelasi &R);
-void deleteAfterRelasi(ListRelasi &L, adrRelasi Prec, adrRelasi &R);
+void showChildOfParent(adrKomposer P_komposer);
+void showParentsOfChild(ListKomposer L_komposer, adrMusik P_musik);
+void showAllParentAndChild(ListKomposer L_komposer);
+void showAllChildAndParent(ListKomposer L_komposer, ListMusik L_musik);
 
-// FIND
-adrRelasi findRelasi(ListRelasi L, adrKomposer P, adrMusik C);
+int countRelationOfParent(adrKomposer P_komposer);
+int countRelationOfChild(ListKomposer L_komposer, adrMusik P_musik);
+int countChildWithoutParent(ListMusik L_musik, ListKomposer L_komposer);
 
-#endif
+void editRelasi(adrKomposer P_komposer, adrMusik P_musik_lama, adrMusik P_musik_baru);
+
+#endif // RELASI_H

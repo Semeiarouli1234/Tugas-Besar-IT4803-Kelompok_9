@@ -3,22 +3,22 @@
 using namespace std;
 
 void createListMusik(ListMusik &L) {
-    L.first = NULL;
-    L.last = NULL;
+    L.first = nullptr;
+    L.last = nullptr;
 }
 
-adrMusik newMusik(string id, string judul) {
-    adrMusik P = new elmusik;   // pastikan struct ini sesuai dengan header
-    P->info.idMusik = id;
-    P->info.judul = judul;
-    P->next = NULL;
-    P->prev = NULL;
+adrMusik newMusik(InfoMusik X) {
+    adrMusik P = new NodeMusik;
+    P->info = X;
+    P->prev = nullptr;
+    P->next = nullptr;
     return P;
 }
 
 void insertLastMusik(ListMusik &L, adrMusik P) {
-    if (L.first == NULL) {
-        L.first = L.last = P;
+    if (L.first == nullptr) {
+        L.first = P;
+        L.last = P;
     } else {
         L.last->next = P;
         P->prev = L.last;
@@ -27,58 +27,60 @@ void insertLastMusik(ListMusik &L, adrMusik P) {
 }
 
 void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P) {
-    if (Prec != NULL) {
+    if (Prec != nullptr) {
         P->next = Prec->next;
-
-        if (Prec->next != NULL)
-            Prec->next->prev = P;
-
         P->prev = Prec;
-        Prec->next = P;
-
-        if (Prec == L.last)
+        if (Prec->next != nullptr) {
+            Prec->next->prev = P;
+        } else {
             L.last = P;
+        }
+        Prec->next = P;
     }
 }
 
 void deleteFirstMusik(ListMusik &L, adrMusik &P) {
-    if (L.first != NULL) {
-        P = L.first;
-
+    P = L.first;
+    if (P != nullptr) {
         if (L.first == L.last) {
-            L.first = L.last = NULL;
+            L.first = nullptr;
+            L.last = nullptr;
         } else {
             L.first = P->next;
-            L.first->prev = NULL;
+            L.first->prev = nullptr;
         }
-
-        P->next = NULL;
-        P->prev = NULL;
+        P->next = nullptr;
+        P->prev = nullptr;
     }
 }
 
 void deleteLastMusik(ListMusik &L, adrMusik &P) {
-    if (L.last != NULL) {
-        P = L.last;
-
+    P = L.last;
+    if (P != nullptr) {
         if (L.first == L.last) {
-            L.first = L.last = NULL;
+            L.first = nullptr;
+            L.last = nullptr;
         } else {
             L.last = P->prev;
-            L.last->next = NULL;
+            L.last->next = nullptr;
         }
-
-        P->next = NULL;
-        P->prev = NULL;
+        P->next = nullptr;
+        P->prev = nullptr;
     }
 }
 
-adrMusik findMusik(ListMusik L, string id) {
-    adrMusik P = L.first;
-    while (P != NULL) {
-        if (P->info.idMusik == id)
-            return P;
-        P = P->next;
+void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P) {
+    if (Prec != nullptr) {
+        P = Prec->next;
+        if (P != nullptr) {
+            Prec->next = P->next;
+            if (P->next != nullptr) {
+                P->next->prev = Prec;
+            } else {
+                L.last = Prec;
+            }
+            P->next = nullptr;
+            P->prev = nullptr;
+        }
     }
-    return NULL;
 }
