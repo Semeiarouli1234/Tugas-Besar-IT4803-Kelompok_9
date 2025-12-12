@@ -37,9 +37,8 @@
 		<Unit filename="Musik.h" />
 		<Unit filename="Musik_103032400025.cpp" />
 		<Unit filename="Musik_103032400033.cpp" />
-		<Unit filename="komposer.h" />
+		<Unit filename="komposer_relasi.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="relation.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
