@@ -14,21 +14,6 @@ void insertFirstMusik(ListMusik &L, adrMusik P) {
     }
 }
 
-void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P) {
-    if (Prec != nullptr) {
-        P = Prec->next;
-        if (P != nullptr) {
-            Prec->next = P->next;
-            if (P->next != nullptr) {
-                P->next->prev = Prec;
-            } else {
-                L.last = Prec;
-            }
-            P->next = nullptr;
-            P->prev = nullptr;
-        }
-    }
-}
 
 void showAllMusik(ListMusik L) {
     cout << "\n--- Daftar Musik ---" << endl;
@@ -42,9 +27,9 @@ void showAllMusik(ListMusik L) {
     int i = 1;
     while (P != nullptr) {
         cout << i << ". ID: " << P->info.idMusik
-             << ", Judul: " << P->info.Judul
-             << ", Durasi: " << P->info.Durasi
-             << ", Tahun Rilis: " << P->info.Tahun_Rilis
+             << ", Judul: " << P->info.judul
+             << ", Durasi: " << P->info.durasi
+             << ", Tahun Rilis: " << P->info.tahunRilis
              << endl;
         P = P->next;
         i++;

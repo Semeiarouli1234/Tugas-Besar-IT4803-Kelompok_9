@@ -39,6 +39,9 @@
 		<Unit filename="Musik_103032400033.cpp" />
 		<Unit filename="komposer_relasi.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="main.h" />
+		<Unit filename="main_admin.cpp" />
+		<Unit filename="main_user.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

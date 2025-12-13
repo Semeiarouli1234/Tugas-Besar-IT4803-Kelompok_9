@@ -12,7 +12,7 @@ struct InfoMusik {
     int tahunRilis;
 };
 
-typedef NodeMusik *adrMusik;
+typedef struct NodeMusik *adrMusik;
 
 struct NodeMusik {
     InfoMusik info;
@@ -35,4 +35,5 @@ void deleteLastMusik(ListMusik &L, adrMusik &P);
 void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P);
 adrMusik findMusik(ListMusik L, string keyword);
 void showAllMusik(ListMusik L);
+
 #endif

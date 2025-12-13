@@ -44,6 +44,6 @@ void showAllKomposer(ListKomposer L);
 
 adrRelasi newRelasi(adrMusik M);
 void addRelasi(adrKomposer K, adrMusik M);
-void deleteRelasi(adrKomposer K, string idMusik, adrRelasi &R);
+void deleteRelasi(adrKomposer K, string idMusik);
 
 #endif

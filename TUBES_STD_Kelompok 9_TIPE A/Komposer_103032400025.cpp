@@ -35,8 +35,8 @@ void showAllKomposer(ListKomposer L) {
     while (P != nullptr) {
         cout << i << ". ID: " << P->info.idKomposer
              << ", Nama: " << P->info.nama
-             << ", Tahun Lahir: " << P->info.Tahun_Lahir
-             << ", Negara: " << P->info.Negara_Asal << endl;
+             << ", Tahun Lahir: " << P->info.tahunLahir
+             << ", Negara: " << P->info.negaraAsal << endl;
         P = P->next;
         i++;
     }
@@ -47,7 +47,7 @@ void insertRelasi(adrKomposer K, adrRelasi R) {
     if (K->firstRelasi == nullptr) {
         K->firstRelasi = R;
     } else {
-        R->next = K->firstRelasi;
+        R->nextRelasi = K->firstRelasi;
         K->firstRelasi = R;
     }
 }
@@ -56,7 +56,7 @@ void showRelasiPerKomposer(adrKomposer K) {
     adrRelasi R = K->firstRelasi;
     while (R != nullptr) {
         cout << R->musik->info.idMusik << " - "
-             << R->musik->info.Judul << endl;
-        R = R->next;
+             << R->musik->info.judul << endl;
+        R = R->nextRelasi;
     }
 }

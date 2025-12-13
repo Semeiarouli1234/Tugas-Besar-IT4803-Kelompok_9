@@ -7,6 +7,40 @@ void createListKomposer(ListKomposer &L) {
     L.first = nullptr;
 }
 
+adrKomposer newKomposer(InfoKomposer X) {
+    adrKomposer P = new NodeKomposer;
+    P->info = X;
+    P->next = nullptr;
+    P->firstRelasi = nullptr;
+    return P;
+}
+
+adrRelasi newRelasi(adrMusik M) {
+    adrRelasi R = new NodeRelasi;
+    R->musik = M;
+    R->nextRelasi = nullptr;
+    return R;
+}
+
+void deleteRelasi(adrKomposer K, string idMusik) {
+    adrRelasi R = K->firstRelasi;
+    adrRelasi Prec = nullptr;
+
+    while (R != nullptr && R->musik->info.idMusik != idMusik) {
+        Prec = R;
+        R = R->nextRelasi;
+    }
+
+    if (R != nullptr) {
+        if (Prec == nullptr) {
+            K->firstRelasi = R->nextRelasi;
+        } else {
+            Prec->nextRelasi = R->nextRelasi;
+        }
+        delete R;
+    }
+}
+
 void insertLastKomposer(ListKomposer &L, adrKomposer P) {
     if (L.first == nullptr) {
         L.first = P;
@@ -24,6 +58,14 @@ void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P) {
         P->next = Prec->next;
         Prec->next = P;
     }
+}
+
+adrKomposer findKomposer(ListKomposer L, string idKomposer) {
+    adrKomposer P = L.first;
+    while (P != nullptr && P->info.idKomposer != idKomposer) {
+        P = P->next;
+    }
+    return P;
 }
 
 void deleteFirstKomposer(ListKomposer &L, adrKomposer &P) {
@@ -49,47 +91,5 @@ void deleteLastKomposer(ListKomposer &L, adrKomposer &P) {
         }
         P = Q->next;
         Q->next = nullptr;
-    }
-}
-
-adrKomposer findKomposer(ListKomposer L, string idKomposer) {
-    adrKomposer P = L.first;
-    while (P != nullptr && P->info.idKomposer != idKomposer) {
-        P = P->next;
-    }
-    return P;
-}
-
-adrKomposer newKomposer(InfoKomposer X) {
-    adrKomposer P = new NodeKomposer;
-    P->info = X;
-    P->next = nullptr;
-    P->firstRelasi = nullptr;
-    return P;
-}
-
-adrRelasi newRelasi(adrMusik M) {
-    adrRelasi R = new NodeRelasi;
-    R->musik = M;
-    R->next = nullptr;
-    return R;
-}
-
-void deleteRelasi(adrKomposer K, string idMusik) {
-    adrRelasi R = K->firstRelasi;
-    adrRelasi Prec = nullptr;
-
-    while (R != nullptr && R->musik->info.idMusik != idMusik) {
-        Prec = R;
-        R = R->next;
-    }
-
-    if (R != nullptr) {
-        if (Prec == nullptr) {
-            K->firstRelasi = R->next;
-        } else {
-            Prec->next = R->next;
-        }
-        delete R;
     }
 }
