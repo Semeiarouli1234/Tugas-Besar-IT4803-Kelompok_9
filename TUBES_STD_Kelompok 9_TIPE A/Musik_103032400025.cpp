@@ -40,9 +40,10 @@ void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P) {
     }
 }
 
+
 void deleteFirstMusik(ListMusik &L, adrMusik &P) {
-    P = L.first;
-    if (P != nullptr) {
+    if (L.first != nullptr) {
+        P = L.first;
         if (L.first == L.last) {
             L.first = nullptr;
             L.last = nullptr;
@@ -52,12 +53,14 @@ void deleteFirstMusik(ListMusik &L, adrMusik &P) {
         }
         P->next = nullptr;
         P->prev = nullptr;
+    } else {
+        P = nullptr;
     }
 }
 
 void deleteLastMusik(ListMusik &L, adrMusik &P) {
-    P = L.last;
-    if (P != nullptr) {
+    if (L.last != nullptr) {
+        P = L.last;
         if (L.first == L.last) {
             L.first = nullptr;
             L.last = nullptr;
@@ -67,21 +70,23 @@ void deleteLastMusik(ListMusik &L, adrMusik &P) {
         }
         P->next = nullptr;
         P->prev = nullptr;
+    } else {
+        P = nullptr;
     }
 }
 
 void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P) {
-    if (Prec != nullptr) {
+    if (Prec != nullptr && Prec->next != nullptr) {
         P = Prec->next;
-        if (P != nullptr) {
-            Prec->next = P->next;
-            if (P->next != nullptr) {
-                P->next->prev = Prec;
-            } else {
-                L.last = Prec;
-            }
-            P->next = nullptr;
-            P->prev = nullptr;
+        Prec->next = P->next;
+        if (P->next != nullptr) {
+            P->next->prev = Prec;
+        } else {
+            L.last = Prec;
         }
+        P->next = nullptr;
+        P->prev = nullptr;
+    } else {
+        P = nullptr;
     }
 }

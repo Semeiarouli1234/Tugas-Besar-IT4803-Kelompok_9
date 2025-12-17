@@ -12,6 +12,39 @@ void insertFirstKomposer(ListKomposer &L, adrKomposer P) {
     }
 }
 
+bool isRelasiExist(adrKomposer K, string idMusik) {
+    adrRelasi R = K->firstRelasi;
+    while (R != nullptr) {
+        if (R->musik->info.idMusik == idMusik) {
+            return true;
+        }
+        R = R->nextRelasi;
+    }
+    return false;
+}
+
+void addRelasiLast(adrKomposer K, adrMusik M) {
+    if (K == nullptr || M == nullptr) {
+        return;
+    }
+
+    if (isRelasiExist(K, M->info.idMusik)) {
+        return;
+    }
+
+    adrRelasi R = newRelasi(M);
+
+    if (K->firstRelasi == nullptr) {
+        K->firstRelasi = R;
+    } else {
+        adrRelasi Q = K->firstRelasi;
+        while (Q->nextRelasi != nullptr) {
+            Q = Q->nextRelasi;
+        }
+        Q->nextRelasi = R;
+    }
+}
+
 void deleteAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer &P) {
     if (Prec != nullptr && Prec->next != nullptr) {
         P = Prec->next;
@@ -40,23 +73,45 @@ void showAllKomposer(ListKomposer L) {
         P = P->next;
         i++;
     }
-    cout << "------------------------------------" << endl;
+
+    cout << "---------------------------------" << endl;
 }
 
-void insertRelasi(adrKomposer K, adrRelasi R) {
-    if (K->firstRelasi == nullptr) {
-        K->firstRelasi = R;
-    } else {
-        R->nextRelasi = K->firstRelasi;
-        K->firstRelasi = R;
+void showKomposerDariMusik(ListKomposer L, string idMusik) {
+    adrKomposer K = L.first;
+    while (K != nullptr) {
+        if (isRelasiExist(K, idMusik)) {
+            cout << K->info.idKomposer << " "
+                 << K->info.nama << endl;
+        }
+        K = K->next;
     }
 }
 
-void showRelasiPerKomposer(adrKomposer K) {
+
+int countMusikTanpaKomposer(ListMusik LM, ListKomposer LK) {
+    int count = 0;
+    adrMusik M = LM.first;
+    while (M != nullptr) {
+        if (countKomposerMusik(LK, M->info.idMusik) == 0) {
+            count++;
+        }
+        M = M->next;
+    }
+    return count;
+}
+
+void editRelasiMusik(adrKomposer K, string idMusikLama, adrMusik MusikBaru) {
+    if (K == nullptr || MusikBaru == nullptr) {
+        return;
+    }
+
     adrRelasi R = K->firstRelasi;
     while (R != nullptr) {
-        cout << R->musik->info.idMusik << " - "
-             << R->musik->info.judul << endl;
+        if (R->musik->info.idMusik == idMusikLama) {
+            R->musik = MusikBaru;
+            return;
+        }
         R = R->nextRelasi;
     }
 }

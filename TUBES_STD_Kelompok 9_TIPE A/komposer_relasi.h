@@ -2,8 +2,7 @@
 #define KOMPOSER_RELASI_H
 
 #include <iostream>
-#include "Musik.h"
-
+#include "musik.h"
 using namespace std;
 
 struct InfoKomposer {
@@ -33,17 +32,31 @@ struct ListKomposer {
 
 void createListKomposer(ListKomposer &L);
 adrKomposer newKomposer(InfoKomposer X);
+
 void insertFirstKomposer(ListKomposer &L, adrKomposer P);
 void insertLastKomposer(ListKomposer &L, adrKomposer P);
 void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P);
-adrKomposer findKomposer(ListKomposer L, string idKomposer);
+
 void deleteFirstKomposer(ListKomposer &L, adrKomposer &P);
 void deleteLastKomposer(ListKomposer &L, adrKomposer &P);
 void deleteAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer &P);
-void showAllKomposer(ListKomposer L);
+
+adrKomposer findKomposer(ListKomposer L, string idKomposer);
 
 adrRelasi newRelasi(adrMusik M);
-void addRelasi(adrKomposer K, adrMusik M);
-void deleteRelasi(adrKomposer K, string idMusik);
+void addRelasiLast(adrKomposer K, adrMusik M);
+void deleteRelasiAfter(adrKomposer K, string idMusik);
+bool isRelasiExist(adrKomposer K, string idMusik);
+
+void showAllKomposer(ListKomposer L);
+void showMusikDariKomposer(adrKomposer K);
+void showKomposerDariMusik(ListKomposer L, string idMusik);
+
+int countMusikKomposer(adrKomposer K);
+int countKomposerMusik(ListKomposer L, string idMusik);
+int countMusikTanpaKomposer(ListMusik LM, ListKomposer LK);
+int countKomposerTanpaMusik(ListKomposer L);
+
+void editRelasiMusik(adrKomposer K, string idMusikLama, adrMusik MusikBaru);
 
 #endif

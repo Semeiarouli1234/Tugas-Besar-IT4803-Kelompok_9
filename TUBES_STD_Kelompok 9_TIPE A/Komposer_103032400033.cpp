@@ -22,22 +22,23 @@ adrRelasi newRelasi(adrMusik M) {
     return R;
 }
 
-void deleteRelasi(adrKomposer K, string idMusik) {
-    adrRelasi R = K->firstRelasi;
-    adrRelasi Prec = nullptr;
-
-    while (R != nullptr && R->musik->info.idMusik != idMusik) {
-        Prec = R;
-        R = R->nextRelasi;
+void deleteRelasiAfter(adrKomposer K, string idMusik) {
+    if (K == nullptr || K->firstRelasi == nullptr) {
+        return;
     }
 
-    if (R != nullptr) {
-        if (Prec == nullptr) {
-            K->firstRelasi = R->nextRelasi;
-        } else {
-            Prec->nextRelasi = R->nextRelasi;
-        }
-        delete R;
+    adrRelasi Prec = K->firstRelasi;
+
+    while (Prec->nextRelasi != nullptr &&
+           Prec->nextRelasi->musik->info.idMusik != idMusik) {
+        Prec = Prec->nextRelasi;
+    }
+
+    if (Prec->nextRelasi != nullptr) {
+        adrRelasi P = Prec->nextRelasi;
+        Prec->nextRelasi = P->nextRelasi;
+        P->nextRelasi = nullptr;
+        delete P;
     }
 }
 
@@ -69,12 +70,12 @@ adrKomposer findKomposer(ListKomposer L, string idKomposer) {
 }
 
 void deleteFirstKomposer(ListKomposer &L, adrKomposer &P) {
-    if (L.first == nullptr) {
-        P = nullptr;
-    } else {
+    if (L.first != nullptr) {
         P = L.first;
         L.first = P->next;
         P->next = nullptr;
+    } else {
+        P = nullptr;
     }
 }
 
@@ -93,3 +94,41 @@ void deleteLastKomposer(ListKomposer &L, adrKomposer &P) {
         Q->next = nullptr;
     }
 }
+
+void showMusikDariKomposer(adrKomposer K) {
+    if (K == nullptr) {
+        return;
+    }
+
+    adrRelasi R = K->firstRelasi;
+    while (R != nullptr) {
+        cout << R->musik->info.idMusik << " "
+             << R->musik->info.judul << endl;
+        R = R->nextRelasi;
+    }
+}
+
+int countKomposerMusik(ListKomposer L, string idMusik) {
+    int count = 0;
+    adrKomposer K = L.first;
+    while (K != nullptr) {
+        if (isRelasiExist(K, idMusik)) {
+            count++;
+        }
+        K = K->next;
+    }
+    return count;
+}
+
+int countKomposerTanpaMusik(ListKomposer L) {
+    int count = 0;
+    adrKomposer K = L.first;
+    while (K != nullptr) {
+        if (K->firstRelasi == nullptr) {
+            count++;
+        }
+        K = K->next;
+    }
+    return count;
+}
+

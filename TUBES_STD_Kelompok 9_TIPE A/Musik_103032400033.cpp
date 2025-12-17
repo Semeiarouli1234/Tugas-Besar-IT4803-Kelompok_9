@@ -14,26 +14,21 @@ void insertFirstMusik(ListMusik &L, adrMusik P) {
     }
 }
 
+adrMusik findMusik(ListMusik L, string idMusik) {
+    adrMusik P = L.first;
+    while (P != nullptr && P->info.idMusik != idMusik) {
+        P = P->next;
+    }
+    return P;
+}
 
 void showAllMusik(ListMusik L) {
-    cout << "\n--- Daftar Musik ---" << endl;
-
-    if (L.first == nullptr) {
-        cout << "List Musik kosong." << endl;
-        return;
-    }
-
     adrMusik P = L.first;
-    int i = 1;
     while (P != nullptr) {
-        cout << i << ". ID: " << P->info.idMusik
-             << ", Judul: " << P->info.judul
-             << ", Durasi: " << P->info.durasi
-             << ", Tahun Rilis: " << P->info.tahunRilis
-             << endl;
+        cout << P->info.idMusik << " "
+             << P->info.judul << " "
+             << P->info.durasi << " "
+             << P->info.tahunRilis << endl;
         P = P->next;
-        i++;
     }
-
-    cout << "---------------------------------" << endl;
 }

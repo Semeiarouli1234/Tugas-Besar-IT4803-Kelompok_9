@@ -2,7 +2,6 @@
 #define MUSIK_H
 
 #include <iostream>
-
 using namespace std;
 
 struct InfoMusik {
@@ -27,13 +26,16 @@ struct ListMusik {
 
 void createListMusik(ListMusik &L);
 adrMusik newMusik(InfoMusik X);
+
 void insertFirstMusik(ListMusik &L, adrMusik P);
 void insertLastMusik(ListMusik &L, adrMusik P);
 void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P);
+
 void deleteFirstMusik(ListMusik &L, adrMusik &P);
 void deleteLastMusik(ListMusik &L, adrMusik &P);
 void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P);
-adrMusik findMusik(ListMusik L, string keyword);
+
+adrMusik findMusik(ListMusik L, string idMusik);
 void showAllMusik(ListMusik L);
 
 #endif

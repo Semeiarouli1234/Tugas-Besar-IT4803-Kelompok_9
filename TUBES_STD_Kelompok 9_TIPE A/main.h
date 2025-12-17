@@ -1,12 +1,18 @@
-#ifndef MAIN_H_INCLUDED
-#define MAIN_H_INCLUDED
-#include <iostream>
+#ifndef MAIN_H
+#define MAIN_H
 
+#include "musik.h"
+#include "komposer_relasi.h"
+#include <iostream>
 using namespace std;
 
-void menuAdmin();
-void menuParent();
-void menuChild();
+// deklarasi saja, tidak definisi
+extern ListMusik LM;
+extern ListKomposer LK;
 
+// fungsi menu
 void menuUser();
-#endif // MAIN_H_INCLUDED
+void menuAdmin();
+void buatDummyData();
+
+#endif
