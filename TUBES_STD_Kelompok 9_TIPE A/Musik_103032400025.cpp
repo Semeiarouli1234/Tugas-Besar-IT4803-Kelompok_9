@@ -11,8 +11,8 @@ void createListMusik(ListMusik &L) {
 adrMusik newMusik(InfoMusik X) {
     adrMusik P = new NodeMusik;
     P->info = X;
-    P->prev = nullptr;
     P->next = nullptr;
+    P->prev = nullptr;
     return P;
 }
 
@@ -21,25 +21,24 @@ void insertLastMusik(ListMusik &L, adrMusik P) {
         L.first = P;
         L.last = P;
     } else {
-        L.last->next = P;
         P->prev = L.last;
+        L.last->next = P;
         L.last = P;
     }
 }
 
 void insertAfterMusik(ListMusik &L, adrMusik Prec, adrMusik P) {
     if (Prec != nullptr) {
-        P->next = Prec->next;
-        P->prev = Prec;
-        if (Prec->next != nullptr) {
-            Prec->next->prev = P;
+        if (Prec == L.last) {
+            insertLastMusik(L, P);
         } else {
-            L.last = P;
+            P->next = Prec->next;
+            P->prev = Prec;
+            Prec->next->prev = P;
+            Prec->next = P;
         }
-        Prec->next = P;
     }
 }
-
 
 void deleteFirstMusik(ListMusik &L, adrMusik &P) {
     if (L.first != nullptr) {
@@ -50,11 +49,8 @@ void deleteFirstMusik(ListMusik &L, adrMusik &P) {
         } else {
             L.first = P->next;
             L.first->prev = nullptr;
+            P->next = nullptr;
         }
-        P->next = nullptr;
-        P->prev = nullptr;
-    } else {
-        P = nullptr;
     }
 }
 
@@ -67,26 +63,21 @@ void deleteLastMusik(ListMusik &L, adrMusik &P) {
         } else {
             L.last = P->prev;
             L.last->next = nullptr;
+            P->prev = nullptr;
         }
-        P->next = nullptr;
-        P->prev = nullptr;
-    } else {
-        P = nullptr;
     }
 }
 
-void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P) {
-    if (Prec != nullptr && Prec->next != nullptr) {
-        P = Prec->next;
-        Prec->next = P->next;
-        if (P->next != nullptr) {
-            P->next->prev = Prec;
-        } else {
-            L.last = Prec;
+adrMusik findMusik(ListMusik L, string idMusik) {
+    adrMusik P = L.first;
+    while (P != nullptr) {
+        if (P->info.idMusik == idMusik) {
+            return P;
         }
-        P->next = nullptr;
-        P->prev = nullptr;
-    } else {
-        P = nullptr;
+        P = P->next;
     }
+    return nullptr;
 }
+
+
+

@@ -15,30 +15,19 @@ adrKomposer newKomposer(InfoKomposer X) {
     return P;
 }
 
-adrRelasi newRelasi(adrMusik M) {
+adrRelasi allocateRelasi(adrMusik M) {
+    if (M == nullptr) return nullptr;
     adrRelasi R = new NodeRelasi;
     R->musik = M;
     R->nextRelasi = nullptr;
     return R;
 }
 
-void deleteRelasiAfter(adrKomposer K, string idMusik) {
-    if (K == nullptr || K->firstRelasi == nullptr) {
-        return;
-    }
-
-    adrRelasi Prec = K->firstRelasi;
-
-    while (Prec->nextRelasi != nullptr &&
-           Prec->nextRelasi->musik->info.idMusik != idMusik) {
-        Prec = Prec->nextRelasi;
-    }
-
-    if (Prec->nextRelasi != nullptr) {
-        adrRelasi P = Prec->nextRelasi;
-        Prec->nextRelasi = P->nextRelasi;
-        P->nextRelasi = nullptr;
-        delete P;
+void deleteRelasiAfter(adrKomposer K, adrRelasi Prec, adrRelasi &R) {
+    if (Prec != nullptr && Prec->nextRelasi != nullptr) {
+        R = Prec->nextRelasi;
+        Prec->nextRelasi = R->nextRelasi;
+        R->nextRelasi = nullptr;
     }
 }
 
@@ -47,14 +36,12 @@ void insertLastKomposer(ListKomposer &L, adrKomposer P) {
         L.first = P;
     } else {
         adrKomposer Q = L.first;
-        while (Q->next != nullptr) {
-            Q = Q->next;
-        }
+        while (Q->next != nullptr) Q = Q->next;
         Q->next = P;
     }
 }
 
-void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P) {
+void insertAfterKomposer(adrKomposer Prec, adrKomposer P) {
     if (Prec != nullptr) {
         P->next = Prec->next;
         Prec->next = P;
@@ -63,10 +50,11 @@ void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P) {
 
 adrKomposer findKomposer(ListKomposer L, string idKomposer) {
     adrKomposer P = L.first;
-    while (P != nullptr && P->info.idKomposer != idKomposer) {
+    while (P != nullptr) {
+        if (P->info.idKomposer == idKomposer) return P;
         P = P->next;
     }
-    return P;
+    return nullptr;
 }
 
 void deleteFirstKomposer(ListKomposer &L, adrKomposer &P) {
@@ -74,8 +62,7 @@ void deleteFirstKomposer(ListKomposer &L, adrKomposer &P) {
         P = L.first;
         L.first = P->next;
         P->next = nullptr;
-    } else {
-        P = nullptr;
+        // Catatan: Idealnya menghapus semua relasi di dalamnya dulu (f)
     }
 }
 
@@ -87,48 +74,42 @@ void deleteLastKomposer(ListKomposer &L, adrKomposer &P) {
         L.first = nullptr;
     } else {
         adrKomposer Q = L.first;
-        while (Q->next->next != nullptr) {
-            Q = Q->next;
-        }
+        while (Q->next->next != nullptr) Q = Q->next;
         P = Q->next;
         Q->next = nullptr;
     }
 }
 
 void showMusikDariKomposer(adrKomposer K) {
-    if (K == nullptr) {
-        return;
-    }
-
+    if (K == nullptr) return;
+    cout << "Daftar Musik karya " << K->info.nama << ":" << endl;
     adrRelasi R = K->firstRelasi;
     while (R != nullptr) {
-        cout << R->musik->info.idMusik << " "
-             << R->musik->info.judul << endl;
+        cout << "  - " << R->musik->info.judul << " [" << R->musik->info.idMusik << "]" << endl;
         R = R->nextRelasi;
     }
 }
 
-int countKomposerMusik(ListKomposer L, string idMusik) {
-    int count = 0;
-    adrKomposer K = L.first;
-    while (K != nullptr) {
-        if (isRelasiExist(K, idMusik)) {
-            count++;
+void showMusikDanKomposer(ListKomposer L, string idMusik) {
+    adrKomposer P = L.first;
+    bool found = false;
+    cout << "Komposer yang terhubung dengan musik ID " << idMusik << ":" << endl;
+    while (P != nullptr) {
+        if (findRelasi(P, idMusik) != nullptr) {
+            cout << "- " << P->info.nama << endl;
+            found = true;
         }
-        K = K->next;
+        P = P->next;
     }
-    return count;
+    if (!found) cout << "Tidak ada komposer untuk musik ini." << endl;
 }
 
-int countKomposerTanpaMusik(ListKomposer L) {
-    int count = 0;
-    adrKomposer K = L.first;
-    while (K != nullptr) {
-        if (K->firstRelasi == nullptr) {
-            count++;
-        }
-        K = K->next;
+int countMusikTanpaRelasi(ListMusik LM, ListKomposer LK) {
+    int cnt = 0;
+    adrMusik M = LM.first;
+    while (M != nullptr) {
+        if (countRelasiPerMusik(LK, M->info.idMusik) == 0) cnt++;
+        M = M->next;
     }
-    return count;
+    return cnt;
 }
-

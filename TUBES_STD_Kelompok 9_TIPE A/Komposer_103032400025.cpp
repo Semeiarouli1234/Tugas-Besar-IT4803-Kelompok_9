@@ -4,114 +4,95 @@
 using namespace std;
 
 void insertFirstKomposer(ListKomposer &L, adrKomposer P) {
-    if (L.first == nullptr) {
-        L.first = P;
-    } else {
-        P->next = L.first;
-        L.first = P;
-    }
+    P->next = L.first;
+    L.first = P;
 }
 
-bool isRelasiExist(adrKomposer K, string idMusik) {
-    adrRelasi R = K->firstRelasi;
-    while (R != nullptr) {
-        if (R->musik->info.idMusik == idMusik) {
-            return true;
-        }
-        R = R->nextRelasi;
-    }
-    return false;
-}
-
-void addRelasiLast(adrKomposer K, adrMusik M) {
-    if (K == nullptr || M == nullptr) {
-        return;
-    }
-
-    if (isRelasiExist(K, M->info.idMusik)) {
-        return;
-    }
-
-    adrRelasi R = newRelasi(M);
-
+void insertRelasiLast(adrKomposer K, adrRelasi R) {
+    if (K == nullptr || R == nullptr) return;
     if (K->firstRelasi == nullptr) {
         K->firstRelasi = R;
     } else {
         adrRelasi Q = K->firstRelasi;
-        while (Q->nextRelasi != nullptr) {
-            Q = Q->nextRelasi;
-        }
+        while (Q->nextRelasi != nullptr) Q = Q->nextRelasi;
         Q->nextRelasi = R;
     }
 }
 
-void deleteAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer &P) {
+
+void deleteAfterKomposer(adrKomposer Prec, adrKomposer &P) {
     if (Prec != nullptr && Prec->next != nullptr) {
         P = Prec->next;
         Prec->next = P->next;
         P->next = nullptr;
-    } else {
-        P = nullptr;
     }
+}
+
+adrRelasi findRelasi(adrKomposer K, string idMusik) {
+    if (K == nullptr) return nullptr;
+    adrRelasi R = K->firstRelasi;
+    while (R != nullptr) {
+        if (R->musik->info.idMusik == idMusik) return R;
+        R = R->nextRelasi;
+    }
+    return nullptr;
 }
 
 void showAllKomposer(ListKomposer L) {
-    cout << "\n--- Daftar Komposer ---" << endl;
-
-    if (L.first == nullptr) {
-        cout << "List Komposer kosong." << endl;
-        return;
-    }
-
     adrKomposer P = L.first;
-    int i = 1;
+    if (P == nullptr) cout << "List Komposer Kosong." << endl;
     while (P != nullptr) {
-        cout << i << ". ID: " << P->info.idKomposer
-             << ", Nama: " << P->info.nama
-             << ", Tahun Lahir: " << P->info.tahunLahir
-             << ", Negara: " << P->info.negaraAsal << endl;
+        cout << "ID: " << P->info.idKomposer << " | Nama: " << P->info.nama << endl;
         P = P->next;
-        i++;
     }
-
-    cout << "---------------------------------" << endl;
 }
 
-void showKomposerDariMusik(ListKomposer L, string idMusik) {
-    adrKomposer K = L.first;
-    while (K != nullptr) {
-        if (isRelasiExist(K, idMusik)) {
-            cout << K->info.idKomposer << " "
-                 << K->info.nama << endl;
+void showKomposerDanMusik(ListKomposer L) {
+    adrKomposer P = L.first;
+    while (P != nullptr) {
+        cout << "Komposer: " << P->info.nama << endl;
+        adrRelasi R = P->firstRelasi;
+        if (R == nullptr) {
+            cout << "  (Belum ada relasi musik)" << endl;
+        } else {
+            while (R != nullptr) {
+                cout << "  -> Musik: " << R->musik->info.judul << endl;
+                R = R->nextRelasi;
+            }
         }
-        K = K->next;
+        P = P->next;
+        cout << "-----------------------------------" << endl;
     }
 }
 
-
-int countMusikTanpaKomposer(ListMusik LM, ListKomposer LK) {
-    int count = 0;
-    adrMusik M = LM.first;
-    while (M != nullptr) {
-        if (countKomposerMusik(LK, M->info.idMusik) == 0) {
-            count++;
-        }
-        M = M->next;
-    }
-    return count;
-}
-
-void editRelasiMusik(adrKomposer K, string idMusikLama, adrMusik MusikBaru) {
-    if (K == nullptr || MusikBaru == nullptr) {
-        return;
-    }
-
+int countRelasiPerKomposer(adrKomposer K) {
+    int cnt = 0;
     adrRelasi R = K->firstRelasi;
     while (R != nullptr) {
-        if (R->musik->info.idMusik == idMusikLama) {
-            R->musik = MusikBaru;
-            return;
-        }
+        cnt++;
         R = R->nextRelasi;
+    }
+    return cnt;
+}
+
+int countRelasiPerMusik(ListKomposer L, string idMusik) {
+    int cnt = 0;
+    adrKomposer P = L.first;
+    while (P != nullptr) {
+        if (findRelasi(P, idMusik) != nullptr) cnt++;
+        P = P->next;
+    }
+    return cnt;
+}
+
+
+void editRelasiMusik(adrKomposer K, string idMusikLama, adrMusik MusikBaru) {
+    if (K == nullptr || MusikBaru == nullptr) return;
+    adrRelasi R = findRelasi(K, idMusikLama);
+    if (R != nullptr) {
+        R->musik = MusikBaru;
+        cout << "Berhasil memperbarui relasi musik." << endl;
+    } else {
+        cout << "Musik lama tidak ditemukan pada komposer ini." << endl;
     }
 }

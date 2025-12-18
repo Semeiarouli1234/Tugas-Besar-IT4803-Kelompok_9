@@ -2,7 +2,9 @@
 #define KOMPOSER_RELASI_H
 
 #include <iostream>
+#include <string>
 #include "musik.h"
+
 using namespace std;
 
 struct InfoKomposer {
@@ -30,33 +32,26 @@ struct ListKomposer {
     adrKomposer first;
 };
 
+void insertFirstKomposer(ListKomposer &L, adrKomposer P);
+void insertRelasiLast(adrKomposer K, adrRelasi R);
+void deleteAfterKomposer(adrKomposer Prec, adrKomposer &P);
+adrRelasi findRelasi(adrKomposer K, string idMusik);
+void showAllKomposer(ListKomposer L);
+void showKomposerDanMusik(ListKomposer L);
+int countRelasiPerKomposer(adrKomposer K);
+int countRelasiPerMusik(ListKomposer L, string idMusik);
+void editRelasiMusik(adrKomposer K, string idMusikLama, adrMusik MusikBaru);
 void createListKomposer(ListKomposer &L);
 adrKomposer newKomposer(InfoKomposer X);
-
-void insertFirstKomposer(ListKomposer &L, adrKomposer P);
+adrRelasi allocateRelasi(adrMusik M);
+void deleteRelasiAfter(adrKomposer K, adrRelasi Prec, adrRelasi &R);
 void insertLastKomposer(ListKomposer &L, adrKomposer P);
-void insertAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer P);
-
+void insertAfterKomposer(adrKomposer Prec, adrKomposer P);
+adrKomposer findKomposer(ListKomposer L, string idKomposer);
 void deleteFirstKomposer(ListKomposer &L, adrKomposer &P);
 void deleteLastKomposer(ListKomposer &L, adrKomposer &P);
-void deleteAfterKomposer(ListKomposer &L, adrKomposer Prec, adrKomposer &P);
-
-adrKomposer findKomposer(ListKomposer L, string idKomposer);
-
-adrRelasi newRelasi(adrMusik M);
-void addRelasiLast(adrKomposer K, adrMusik M);
-void deleteRelasiAfter(adrKomposer K, string idMusik);
-bool isRelasiExist(adrKomposer K, string idMusik);
-
-void showAllKomposer(ListKomposer L);
 void showMusikDariKomposer(adrKomposer K);
-void showKomposerDariMusik(ListKomposer L, string idMusik);
-
-int countMusikKomposer(adrKomposer K);
-int countKomposerMusik(ListKomposer L, string idMusik);
-int countMusikTanpaKomposer(ListMusik LM, ListKomposer LK);
-int countKomposerTanpaMusik(ListKomposer L);
-
-void editRelasiMusik(adrKomposer K, string idMusikLama, adrMusik MusikBaru);
+void showMusikDanKomposer(ListKomposer L, string idMusik);
+int countMusikTanpaRelasi(ListMusik LM, ListKomposer LK);
 
 #endif

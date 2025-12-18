@@ -14,21 +14,30 @@ void insertFirstMusik(ListMusik &L, adrMusik P) {
     }
 }
 
-adrMusik findMusik(ListMusik L, string idMusik) {
-    adrMusik P = L.first;
-    while (P != nullptr && P->info.idMusik != idMusik) {
-        P = P->next;
+void deleteAfterMusik(ListMusik &L, adrMusik Prec, adrMusik &P) {
+    if (Prec != nullptr && Prec->next != nullptr) {
+        P = Prec->next;
+        if (P == L.last) {
+            deleteLastMusik(L, P);
+        } else {
+            Prec->next = P->next;
+            P->next->prev = Prec;
+            P->next = nullptr;
+            P->prev = nullptr;
+        }
     }
-    return P;
 }
+
 
 void showAllMusik(ListMusik L) {
     adrMusik P = L.first;
-    while (P != nullptr) {
-        cout << P->info.idMusik << " "
-             << P->info.judul << " "
-             << P->info.durasi << " "
-             << P->info.tahunRilis << endl;
-        P = P->next;
+    if (P == nullptr) {
+        cout << "List Musik Kosong." << endl;
+    } else {
+        while (P != nullptr) {
+            cout << "ID: " << P->info.idMusik << " | Judul: " << P->info.judul;
+            cout << " | Durasi: " << P->info.durasi << " | Tahun: " << P->info.tahunRilis << endl;
+            P = P->next;
+        }
     }
 }

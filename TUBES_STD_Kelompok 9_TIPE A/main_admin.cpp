@@ -1,95 +1,128 @@
 #include "main.h"
-#include <limits>
 
-void menuAdmin() {
-    int option;
-    do {
-        system("cls"); // Windows, ganti "clear" di Linux/macOS
-        cout << "====== Menu Admin ======" << endl;
-        cout << "|| 1. Tambah Musik       ||" << endl;
-        cout << "|| 2. Hapus Musik        ||" << endl;
-        cout << "|| 3. Lihat Semua Musik  ||" << endl;
-        cout << "|| 4. Tambah Komposer    ||" << endl;
-        cout << "|| 5. Lihat Semua Komposer||" << endl;
-        cout << "|| 0. back               ||" << endl;
-        cout << "========================" << endl;
-        cout << "Choose your option : ";
-        cin >> option;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+void menuAdmin(ListKomposer &LK, ListMusik &LM) {
+    int opt = -1;
+    while (opt != 0) {
+        system("cls");
+        cout << "=== MENU ADMIN (POIN a-f, j, k) ===" << endl;
+        cout << "1. Kelola Komposer (Parent)\n2. Kelola Musik (Child)\n0. Kembali\nPilih: ";
+        cin >> opt; clearBuffer();
+        if (opt == 1) menuParent(LK);
+        else if (opt == 2) menuChild(LM, LK);
+    }
+}
 
-        switch(option) {
-            case 1: { // Tambah Musik
-                InfoMusik X;
-                cout << "ID Musik: "; getline(cin, X.idMusik);
-                cout << "Judul: "; getline(cin, X.judul);
-                cout << "Durasi (menit): "; cin >> X.durasi;
-                cout << "Tahun Rilis: "; cin >> X.tahunRilis;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                insertLastMusik(LM, newMusik(X));
-                cout << "Musik berhasil ditambahkan.\n";
-                cout << "Press Enter to continue...";
-                cin.get();
-                break;
-            }
-            case 2: { // Hapus Musik
-                string id;
-                cout << "ID Musik yang dihapus: "; getline(cin, id);
-                adrMusik P = findMusik(LM, id);
-                if(P != nullptr) {
-                    // cek posisi musik
-                    if(P == LM.first) {
-                        deleteFirstMusik(LM, P);
-                    } else if(P == LM.last) {
-                        deleteLastMusik(LM, P);
-                    } else {
-                        adrMusik prec = LM.first;
-                        while(prec != nullptr && prec->next != P) {
-                            prec = prec->next;
-                        }
-                        if(prec != nullptr)
-                            deleteAfterMusik(LM, prec, P);
-                    }
-                    cout << "Musik berhasil dihapus.\n";
-                } else {
-                    cout << "Musik tidak ditemukan.\n";
-                }
-                cout << "Press Enter to continue...";
-                cin.get();
-                break;
-            }
-            case 3: // Lihat Semua Musik
-                cout << "=== Semua Musik ===\n";
-                showAllMusik(LM);
-                cout << "Press Enter to continue...";
-                cin.get();
-                break;
-            case 4: { // Tambah Komposer
-                InfoKomposer K;
-                cout << "ID Komposer: "; getline(cin, K.idKomposer);
-                cout << "Nama: "; getline(cin, K.nama);
-                cout << "Tahun Lahir: "; cin >> K.tahunLahir;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "Negara Asal: "; getline(cin, K.negaraAsal);
-                insertLastKomposer(LK, newKomposer(K));
-                cout << "Komposer berhasil ditambahkan.\n";
-                cout << "Press Enter to continue...";
-                cin.get();
-                break;
-            }
-            case 5: // Lihat Semua Komposer
-                cout << "=== Semua Komposer ===\n";
+void menuParent(ListKomposer &LK) {
+    int opt = -1;
+    while (opt != 0) {
+        system("cls");
+        cout << "=== MANAJEMEN KOMPOSER (PARENT) ===" << endl;
+        cout << "1. Insert First\n2. Insert Last\n3. Insert After\n";
+        cout << "4. Delete First\n5. Delete Last\n6. Delete After\n";
+        cout << "7. Show All Parent\n0. Kembali\nPilih: ";
+        cin >> opt; clearBuffer();
+
+        if (opt >= 1 && opt <= 3) {
+            if (opt == 3) {
+                cout << "\n--- Senarai Komposer Semasa ---" << endl;
                 showAllKomposer(LK);
-                cout << "Press Enter to continue...";
-                cin.get();
-                break;
-            case 0:
-                cout << "Kembali ke menu utama...\n";
-                break;
-            default:
-                cout << "Pilihan tidak valid!\n";
-                cout << "Press Enter untuk melanjutkan...";
-                cin.get();
-                break;
+            }
+            InfoKomposer X;
+            cout << "ID Baru: "; getline(cin, X.idKomposer);
+            cout << "Nama: "; getline(cin, X.nama);
+            cout << "Tahun Lahir: "; cin >> X.tahunLahir; clearBuffer();
+            cout << "Negara: "; getline(cin, X.negaraAsal);
+            adrKomposer P = newKomposer(X);
+
+            if (opt == 1) insertFirstKomposer(LK, P);
+            else if (opt == 2) insertLastKomposer(LK, P);
+            else {
+                string idPrec;
+                cout << "Masukkan ID Komposer SEBELUM posisi baru: "; getline(cin, idPrec);
+                adrKomposer Prec = findKomposer(LK, idPrec);
+                if (Prec) insertAfterKomposer(Prec, P);
+                else cout << "ID tidak dijumpai!" << endl;
+            }
+            system("pause");
+        } else if (opt >= 4 && opt <= 6) {
+            cout << "\n--- Senarai Komposer Semasa ---" << endl;
+            showAllKomposer(LK);
+            adrKomposer P = nullptr;
+            if (opt == 4) deleteFirstKomposer(LK, P);
+            else if (opt == 5) deleteLastKomposer(LK, P);
+            else {
+                string idPrec;
+                cout << "Masukkan ID Komposer SEBELUM yang ingin dihapus: "; getline(cin, idPrec);
+                adrKomposer Prec = findKomposer(LK, idPrec);
+                if (Prec) deleteAfterKomposer(Prec, P);
+            }
+            if (P) cout << "Berhasil membuang: " << P->info.nama << endl;
+            else cout << "Gagal membuang data." << endl;
+            system("pause");
+        } else if (opt == 7) {
+            showAllKomposer(LK); system("pause");
         }
-    } while(option != 0);
+    }
+}
+
+void menuChild(ListMusik &LM, ListKomposer &LK) {
+    int opt = -1;
+    while (opt != 0) {
+        system("cls");
+        cout << "=== MANAJEMEN MUSIK (CHILD) ===" << endl;
+        cout << "1. Insert First\n2. Insert Last\n3. Insert After\n";
+        cout << "4. Delete First\n5. Delete Last\n6. Delete After\n";
+        cout << "7. Insert Relation (c)\n8. Show All Musik\n0. Kembali\nPilih: ";
+        cin >> opt; clearBuffer();
+
+        if (opt >= 1 && opt <= 3) {
+            if (opt == 3) {
+                cout << "\n--- Senarai Musik Semasa ---" << endl;
+                showAllMusik(LM);
+            }
+            InfoMusik X;
+            cout << "ID Baru: "; getline(cin, X.idMusik);
+            cout << "Judul: "; getline(cin, X.judul);
+            cout << "Durasi: "; cin >> X.durasi;
+            cout << "Tahun: "; cin >> X.tahunRilis; clearBuffer();
+            adrMusik P = newMusik(X);
+
+            if (opt == 1) insertFirstMusik(LM, P);
+            else if (opt == 2) insertLastMusik(LM, P);
+            else {
+                string idPrec;
+                cout << "Masukkan ID Musik SEBELUM posisi baru: "; getline(cin, idPrec);
+                adrMusik Prec = findMusik(LM, idPrec);
+                if (Prec) insertAfterMusik(LM, Prec, P);
+                else cout << "ID tidak dijumpai!" << endl;
+            }
+            system("pause");
+        } else if (opt >= 4 && opt <= 6) {
+            cout << "\n--- Senarai Musik Semasa ---" << endl;
+            showAllMusik(LM);
+            adrMusik P = nullptr;
+            if (opt == 4) deleteFirstMusik(LM, P);
+            else if (opt == 5) deleteLastMusik(LM, P);
+            else {
+                string idPrec;
+                cout << "Masukkan ID Musik SEBELUM yang ingin dihapus: "; getline(cin, idPrec);
+                adrMusik Prec = findMusik(LM, idPrec);
+                if (Prec) deleteAfterMusik(LM, Prec, P);
+            }
+            if (P) cout << "Berhasil membuang: " << P->info.judul << endl;
+            else cout << "Gagal membuang data." << endl;
+            system("pause");
+        } else if (opt == 7) {
+            string idK, idM;
+            cout << "ID Parent: "; getline(cin, idK);
+            cout << "ID Child: "; getline(cin, idM);
+            adrKomposer K = findKomposer(LK, idK);
+            adrMusik M = findMusik(LM, idM);
+            if (K && M) insertRelasiLast(K, allocateRelasi(M));
+            else cout << "Gagal menghubungkan relasi." << endl;
+            system("pause");
+        } else if (opt == 8) {
+            showAllMusik(LM); system("pause");
+        }
+    }
 }
